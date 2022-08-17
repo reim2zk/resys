@@ -28,11 +28,17 @@ func NewPart(partType string, cons map[string]string) *Part {
 	case "FullAdder":
 		ins = []string{"a", "b", "c"}
 		outs = []string{"sum", "carry"}
-	case "Decode16":
+	case "Decoder16":
 		ins = []string{"in"}
 		outs = []string{}
 		for j := 0; j < 16; j++ {
 			outs = append(outs, strconv.Itoa(j))
+		}
+	case "Encoder16":
+		ins = []string{}
+		outs = []string{"out"}
+		for j := 0; j < 16; j++ {
+			ins = append(ins, strconv.Itoa(j))
 		}
 	default:
 		panic(fmt.Sprintf("unsupported partType. partType=%s", partType))
@@ -90,7 +96,7 @@ func (p *Part) Simulate(conValues map[string]int) {
 		}
 	} else if p.partType == "FullAdder" {
 		p.runFullAdder(conValues)
-	} else if p.partType == "Decode16" {
+	} else if p.partType == "Decoder16" {
 		v := conValues[p.inCons["in"]]
 		var n = 1
 		for j := 0; j < 16; j++ {
@@ -102,6 +108,8 @@ func (p *Part) Simulate(conValues map[string]int) {
 			}
 			n = n * 2
 		}
+	} else if p.partType == "Encoder16" {
+		p.runEncoder16(conValues)
 	} else {
 		panic(fmt.Sprintf("unsupported partType. partType=%s", p.partType))
 	}
@@ -129,4 +137,15 @@ func (p *Part) runFullAdder(conValues map[string]int) {
 	default:
 		panic("invalid value")
 	}
+}
+
+func (p *Part) runEncoder16(conValues map[string]int) {
+	var n = 1
+	var x = 0
+	for j := 0; j < 16; j++ {
+		con := p.inCons[strconv.Itoa(j)]
+		x += n * conValues[con]
+		n = n * 2
+	}
+	conValues[p.outCons["out"]] = x
 }

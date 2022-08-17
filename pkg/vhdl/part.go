@@ -1,6 +1,9 @@
 package vhdl
 
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+)
 
 type Part struct {
 	partType string
@@ -19,9 +22,12 @@ func NewPart(partType string, cons map[string]string) *Part {
 	case "Not", "Not16", "Copy16":
 		ins = []string{"in"}
 		outs = []string{"out"}
-	case "And", "And16", "Or", "Or16", "Nand", "Nand16":
+	case "And", "And16", "Or", "Or16", "Nand", "Nand16", "Xor", "Xor16":
 		ins = []string{"a", "b"}
 		outs = []string{"out"}
+	case "FullAdder":
+		ins = []string{"a", "b", "c"}
+		outs = []string{"sum", "carry"}
 	case "Decode16":
 		ins = []string{"in"}
 		outs = []string{}
@@ -29,7 +35,7 @@ func NewPart(partType string, cons map[string]string) *Part {
 			outs = append(outs, strconv.Itoa(j))
 		}
 	default:
-		panic("unsupported partType.")
+		panic(fmt.Sprintf("unsupported partType. partType=%s", partType))
 	}
 	for _, i := range ins {
 		part.inCons[i] = cons[i]
@@ -69,6 +75,11 @@ func (p *Part) Simulate(conValues map[string]int) {
 		a := p.inCons["a"]
 		b := p.inCons["b"]
 		conValues[o] = 65535 & (^(conValues[a] & conValues[b]))
+	} else if p.partType == "Xor" {
+		o := p.outCons["out"]
+		a := conValues[p.inCons["a"]]
+		b := conValues[p.inCons["b"]]
+		conValues[o] = 1 & ((a & ^b) | (^a & b))
 	} else if p.partType == "Copy16" {
 		i := p.inCons["in"]
 		o := p.outCons["out"]
@@ -77,6 +88,8 @@ func (p *Part) Simulate(conValues map[string]int) {
 		} else {
 			conValues[o] = 65535
 		}
+	} else if p.partType == "FullAdder" {
+		p.runFullAdder(conValues)
 	} else if p.partType == "Decode16" {
 		v := conValues[p.inCons["in"]]
 		var n = 1
@@ -90,6 +103,30 @@ func (p *Part) Simulate(conValues map[string]int) {
 			n = n * 2
 		}
 	} else {
-		panic("Unsupported partType")
+		panic(fmt.Sprintf("unsupported partType. partType=%s", p.partType))
+	}
+}
+
+func (p *Part) runFullAdder(conValues map[string]int) {
+	a := 1 & conValues[p.inCons["a"]]
+	b := 1 & conValues[p.inCons["b"]]
+	c := 1 & conValues[p.inCons["c"]]
+	conSum := p.outCons["sum"]
+	conCry := p.outCons["carry"]
+	switch a + b + c {
+	case 0:
+		conValues[conSum] = 0
+		conValues[conCry] = 0
+	case 1:
+		conValues[conSum] = 1
+		conValues[conCry] = 0
+	case 2:
+		conValues[conSum] = 0
+		conValues[conCry] = 1
+	case 3:
+		conValues[conSum] = 1
+		conValues[conCry] = 1
+	default:
+		panic("invalid value")
 	}
 }

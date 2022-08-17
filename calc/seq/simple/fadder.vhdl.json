@@ -1,0 +1,14 @@
+{
+    "name": "full adder",
+    "in": ["a", "b", "c"],
+    "out": ["sum", "carry"],
+    "parts": [
+        {"name": "And", "con": {"a": "a", "b": "b", "out": "cry1"}},
+        {"name": "Xor", "con": {"a": "a", "b": "b", "out": "sum1"}},
+
+        {"name": "And", "con": {"a": "sum1", "b": "c", "out": "cry2"}},
+        {"name": "Xor", "con": {"a": "sum1", "b": "c", "out": "sum"}},
+
+        {"name": "Or", "con": {"a": "cry1", "b": "cry2", "out": "carry"}}
+    ]
+}

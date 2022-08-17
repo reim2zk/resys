@@ -1,0 +1,9 @@
+{
+    "name": "full adder",
+    "in": ["a", "b", "c"],
+    "out": ["sum", "carry"],
+    "parts": [
+        {"name": "FullAdder", "con": {"a": "a", "b": "b", "c": "c", 
+                                      "sum": "sum", "carry": "carry"}}
+    ]
+}

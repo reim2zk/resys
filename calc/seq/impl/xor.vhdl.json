@@ -1,0 +1,8 @@
+{
+    "name": "xor",
+    "in": ["a", "b"],
+    "out": ["sum", "carry"],
+    "parts": [
+        {"name": "Xor", "con": {"a": "a", "b": "b", "out": "out"}}
+    ]
+}

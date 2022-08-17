@@ -53,8 +53,7 @@ func (p *Circuit) Run(inConValues map[string]int, outCons []string, verbose int)
 		for i := range p.parts {
 			// finish when all output are evaluated
 			var finish = true
-			for j := range outCons {
-				con := outCons[j]
+			for _, con := range outCons {
 				finish = finish && (p.conValues[con] != -1)
 			}
 			if finish {
@@ -65,13 +64,11 @@ func (p *Circuit) Run(inConValues map[string]int, outCons []string, verbose int)
 			part := p.parts[i]
 			var target = true
 			// 1. all inputs are evaluated
-			for pin := range part.inCons {
-				con := part.inCons[pin]
+			for _, con := range part.inCons {
 				target = target && (p.conValues[con] != -1)
 			}
 			// 2. output is not evaluated
-			for pin := range part.outCons {
-				con := part.outCons[pin]
+			for _, con := range part.outCons {
 				target = target && (p.conValues[con] == -1)
 			}
 			if target {

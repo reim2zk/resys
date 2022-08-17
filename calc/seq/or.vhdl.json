@@ -1,0 +1,10 @@
+{
+    "name": "or",
+    "in": ["a", "b"],
+    "out": ["out"],
+    "parts": [
+        {"name": "Nand", "con": {"a": "a", "b": "a", "out": "nota"}},
+        {"name": "Nand", "con": {"a": "b", "b": "b", "out": "notb"}},        
+        {"name": "Nand", "con": {"a": "nota", "b": "notb", "out": "out"}}
+    ]
+}

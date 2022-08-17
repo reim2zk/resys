@@ -1,0 +1,15 @@
+{
+    "load": "dmux4.vhdl.json",
+    "output": ["in", "sel0", "sel1", "a", "b", "c", "d"],
+    "eval": [
+        {"in": 0, "sel0": 0, "sel1": 0},
+        {"in": 0, "sel0": 0, "sel1": 1},
+        {"in": 0, "sel0": 1, "sel1": 0},
+        {"in": 0, "sel0": 1, "sel1": 1},
+
+        {"in": 2, "sel0": 0, "sel1": 0},
+        {"in": 3, "sel0": 0, "sel1": 1},
+        {"in": 4, "sel0": 1, "sel1": 0},
+        {"in": 5, "sel0": 1, "sel1": 1} 
+    ]
+}

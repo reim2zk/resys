@@ -53,7 +53,7 @@ func ReadSeqScript(fileName string) *Seq {
 func ReadCircuit(fileName string) *vhdl.Circuit {
 	raw, err := ioutil.ReadFile(fileName)
 	if err != nil {
-		panic("failed to read")
+		panic(fmt.Sprintf("failed to read file. fileName=%s", fileName))
 	}
 	var vhdlScript VhdlScript
 	json.Unmarshal(raw, &vhdlScript)

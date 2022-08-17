@@ -1,0 +1,31 @@
+{
+    "name": "mux4",
+    "in": ["a", "b", "c", "d", "sel0", "sel1"],
+    "out": ["out"],
+    "parts": [
+        {"name": "Not", "con": {"in": "sel0", "out": "nsel0"}},
+        {"name": "Not", "con": {"in": "sel1", "out": "nsel1"}},
+
+        {"name": "Copy16", "con": {"in": "sel0", "out": "sel0h"}},
+        {"name": "Copy16", "con": {"in": "sel1", "out": "sel1h"}},
+        {"name": "Copy16", "con": {"in": "nsel0", "out": "nsel0h"}},
+        {"name": "Copy16", "con": {"in": "nsel1", "out": "nsel1h"}},
+
+        {"name": "And16", "con": {"a": "a",  "b": "nsel0h", "out": "a1"}},
+        {"name": "And16", "con": {"a": "a1", "b": "nsel1h", "out": "a2"}},
+
+        {"name": "And16", "con": {"a": "b",  "b": "sel0h", "out": "b1"}},
+        {"name": "And16", "con": {"a": "b1", "b": "nsel1h", "out": "b2"}},
+
+        {"name": "And16", "con": {"a": "c",  "b": "nsel0h",  "out": "c1"}},
+        {"name": "And16", "con": {"a": "c1", "b": "sel1h", "out": "c2"}},
+
+        {"name": "And16", "con": {"a": "d",  "b": "sel0h",  "out": "d1"}},
+        {"name": "And16", "con": {"a": "d1", "b": "sel1h", "out": "d2"}},
+
+        {"name": "Or16", "con": {"a": "a2", "b": "b2", "out": "ab"}},
+        {"name": "Or16", "con": {"a": "c2", "b": "d2", "out": "cd"}},
+
+        {"name": "Or16", "con": {"a": "ab", "b": "cd", "out": "out"}}
+    ]
+}

@@ -1,0 +1,8 @@
+{
+    "load": "not.vhdl.json",
+    "output": ["in", "out"],
+    "eval": [
+        {"in": 0},
+        {"in": 1}
+    ]
+}

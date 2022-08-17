@@ -1,0 +1,9 @@
+{
+    "name": "and2",
+    "in": ["a0", "a1", "b0", "b1"],
+    "out": ["out0", "out1"],
+    "parts": [
+        {"name": "And", "con": {"a": "a0", "b": "b0", "out": "out0"}},
+        {"name": "And", "con": {"a": "a1", "b": "b1", "out": "out1"}}
+    ]
+}

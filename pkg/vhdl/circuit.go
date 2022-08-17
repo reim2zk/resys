@@ -20,47 +20,10 @@ func (p *Circuit) Print() {
 	fmt.Println("Circuit")
 	fmt.Println("conValues:")
 	fmt.Println(p.conValues)
-	// fmt.Println("parts:")
-	// for i := 0; i < len(p.parts); i++ {
-	// 	fmt.Println(p.parts[i].partType)
-	// }
 }
 
 func (p *Circuit) AddPart(partType string, cons map[string]string) {
-	part := &Part{}
-	part.partType = partType
-	part.inCons = make(map[string]string, 0)
-	part.outCons = make(map[string]string, 0)
-	if partType == "Not" {
-		i := cons["in"]
-		o := cons["out"]
-		part.inCons["in"] = i
-		part.outCons["out"] = o
-		p.conValues[i] = -1
-		p.conValues[o] = -1
-	} else if partType == "And" {
-		a := cons["a"]
-		b := cons["b"]
-		o := cons["out"]
-		part.inCons["a"] = a
-		part.inCons["b"] = b
-		part.outCons["out"] = o
-		p.conValues[a] = -1
-		p.conValues[b] = -1
-		p.conValues[o] = -1
-	} else if partType == "Or" {
-		a := cons["a"]
-		b := cons["b"]
-		o := cons["out"]
-		part.inCons["a"] = a
-		part.inCons["b"] = b
-		part.outCons["out"] = o
-		p.conValues[a] = -1
-		p.conValues[b] = -1
-		p.conValues[o] = -1
-	} else {
-		panic("unsupported partType.")
-	}
+	part := NewPart(partType, cons, p.conValues)
 	p.parts = append(p.parts, part)
 }
 

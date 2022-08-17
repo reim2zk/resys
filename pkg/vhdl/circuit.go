@@ -23,7 +23,13 @@ func (p *Circuit) Print() {
 }
 
 func (p *Circuit) AddPart(partType string, cons map[string]string) {
-	part := NewPart(partType, cons, p.conValues)
+	part := NewPart(partType, cons)
+	for _, con := range part.inCons {
+		p.conValues[con] = -1
+	}
+	for _, con := range part.outCons {
+		p.conValues[con] = -1
+	}
 	p.parts = append(p.parts, part)
 }
 

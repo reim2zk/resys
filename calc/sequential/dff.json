@@ -1,0 +1,19 @@
+{
+    "load": ".",
+    "output": ["in", "out"],
+    "eval": [
+        {"in": 1},
+        {"in": 0},
+        {"in": 1},
+        {"in": 1},
+        {"in": 0},
+        {"in": 1}
+    ],
+
+    "name": "DFF",
+    "in": ["in"],
+    "out": ["out"],
+    "parts": [
+        {"name": "DFF", "con": {"in": "in", "out": "out"}}
+    ]
+}

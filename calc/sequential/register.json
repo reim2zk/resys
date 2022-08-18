@@ -1,0 +1,22 @@
+{
+    "load": ".",
+    "output": ["in", "out"],
+    "eval": [
+        {"in": 1, "load": 1},
+        {"in": 0, "load": 1},
+        {"in": 1, "load": 0},
+        {"in": 0, "load": 0},
+        {"in": 1, "load": 0},
+        {"in": 0, "load": 0},
+        {"in": 1, "load": 1},
+        {"in": 0, "load": 0}
+    ],
+
+    "name": "register",
+    "in": ["in", "load"],
+    "out": ["out"],
+    "parts": [
+        {"name": "DFF", "con": {"in": "w", "out": "out"}},
+        {"name": "Mux2Way16", "con": {"a": "out", "b": "in", "sel": "load", "out": "w"}}
+    ]
+}

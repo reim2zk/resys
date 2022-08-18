@@ -45,7 +45,12 @@ func ReadSeqScript(fileName string) *Seq {
 	seq.outputCons = script.Output
 	seq.conValuesList = script.Eval
 
-	fp := filepath.Dir(fileName) + "/" + script.Load
+	var fp string
+	if script.Load == "." {
+		fp = fileName
+	} else {
+		fp = filepath.Dir(fileName) + "/" + script.Load
+	}
 	seq.circuit = ReadCircuit(fp)
 	return &seq
 }

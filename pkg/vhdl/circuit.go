@@ -44,11 +44,6 @@ func (p *Circuit) Run(inConValues map[string]int, outCons []string, verbose int)
 		p.conValues[con] = inConValues[con]
 	}
 
-	// pre run
-	for _, part := range p.parts {
-		part.PreRun(p.conValues)
-	}
-
 	// loop until evaluation stopped
 	for true {
 		var update = false
@@ -56,15 +51,6 @@ func (p *Circuit) Run(inConValues map[string]int, outCons []string, verbose int)
 			fmt.Println(p.conValues)
 		}
 		for i := range p.parts {
-			// finish when all output are evaluated
-			var finish = true
-			for _, con := range outCons {
-				finish = finish && (p.conValues[con] != -1)
-			}
-			if finish {
-				return
-			}
-
 			// search part
 			part := p.parts[i]
 			var target = true
@@ -82,10 +68,22 @@ func (p *Circuit) Run(inConValues map[string]int, outCons []string, verbose int)
 			}
 		}
 		if !update {
-			panic("failed to find part to change")
+			break
 		}
 	}
-	panic("failed to simulate")
+
+	// post run
+	for i := range p.parts {
+		p.parts[i].PostRun(p.conValues)
+	}
+
+	// check all output are evaluated
+	for _, con := range outCons {
+		if p.conValues[con] == -1 {
+			panic(fmt.Sprintf("unevaluated output exists. con=%s", con))
+		}
+	}
+	return
 }
 
 func (p *Circuit) ConValue(con string) int {

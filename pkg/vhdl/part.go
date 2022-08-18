@@ -9,6 +9,7 @@ type Part struct {
 	partType string
 	inCons   map[string]string
 	outCons  map[string]string
+	midCons  map[string]string
 	memory   []int
 }
 
@@ -17,8 +18,10 @@ func NewPart(partType string, cons map[string]string) *Part {
 	part.partType = partType
 	part.inCons = make(map[string]string, 0)
 	part.outCons = make(map[string]string, 0)
+	part.midCons = make(map[string]string, 0)
 	var ins []string
 	var outs []string
+	mids := make([]string, 0)
 	var num_memory = 0
 	switch partType {
 	case "One", "Zero":
@@ -52,8 +55,9 @@ func NewPart(partType string, cons map[string]string) *Part {
 		ins = []string{"in", "sel"}
 		outs = []string{"a", "b"}
 	case "DFF":
-		ins = []string{"in"}
+		ins = make([]string, 0)
 		outs = []string{"out"}
+		mids = append(mids, "in")
 		num_memory = 1
 	default:
 		panic(fmt.Sprintf("unsupported partType. partType=%s", partType))
@@ -67,14 +71,17 @@ func NewPart(partType string, cons map[string]string) *Part {
 	for _, i := range outs {
 		part.outCons[i] = cons[i]
 	}
+	for _, i := range mids {
+		part.midCons[i] = cons[i]
+	}
 	part.memory = make([]int, num_memory)
 	return part
 }
 
-func (p *Part) PreRun(conValues map[string]int) {
+func (p *Part) PostRun(conValues map[string]int) {
 	switch p.partType {
 	case "DFF":
-		conValues[p.outCons["out"]] = p.memory[0]
+		p.memory[0] = conValues[p.midCons["in"]]
 	}
 }
 
@@ -164,7 +171,7 @@ func (p *Part) Simulate(conValues map[string]int) {
 			conValues[o] = conValues[p.inCons["b"]]
 		}
 	} else if p.partType == "DFF" {
-		p.memory[0] = conValues[p.inCons["in"]]
+		conValues[p.outCons["out"]] = p.memory[0]
 	} else {
 		panic(fmt.Sprintf("unsupported partType. partType=%s", p.partType))
 	}

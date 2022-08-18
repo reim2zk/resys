@@ -1,6 +1,6 @@
 {
     "load": ".",
-    "output": ["in", "out"],
+    "output": ["in", "load", "out"],
     "eval": [
         {"in": 1, "load": 1},
         {"in": 0, "load": 1},

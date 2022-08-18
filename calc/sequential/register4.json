@@ -1,0 +1,35 @@
+{
+    "load": ".",
+    "output": ["in", "load", "out"],
+    "eval": [
+        {"in": 1, "load": 1},
+        {"in": 2, "load": 1},
+        {"in": 3, "load": 0},
+        {"in": 4, "load": 0},
+        {"in": 5, "load": 0},
+        {"in": 6, "load": 1},
+        {"in": 7, "load": 0},
+        {"in": 8, "load": 0}
+    ],
+
+    "name": "register",
+    "in": ["in", "load"],
+    "out": ["out"],
+    "parts": [
+        {"name": "Decoder16", "con": {"in": "in", "0": "i0", "1": "i1", "2": "i2", "3": "i3"}},
+
+        {"name": "DFF", "con": {"in": "w0", "out": "o0"}},
+        {"name": "Mux2Way16", "con": {"a": "o0", "b": "i0", "sel": "load", "out": "w0"}},
+
+        {"name": "DFF", "con": {"in": "w1", "out": "o1"}},
+        {"name": "Mux2Way16", "con": {"a": "o1", "b": "i1", "sel": "load", "out": "w1"}},        
+
+        {"name": "DFF", "con": {"in": "w2", "out": "o2"}},
+        {"name": "Mux2Way16", "con": {"a": "o2", "b": "i2", "sel": "load", "out": "w2"}},
+
+        {"name": "DFF", "con": {"in": "w3", "out": "o3"}},
+        {"name": "Mux2Way16", "con": {"a": "o3", "b": "i3", "sel": "load", "out": "w3"}},
+
+        {"name": "Encoder16", "con": {"0": "o0", "1": "o1", "2": "o2", "3": "o3", "out": "out"}}
+    ]
+}

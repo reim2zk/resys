@@ -59,6 +59,11 @@ func NewPart(partType string, cons map[string]string) *Part {
 		outs = []string{"out"}
 		mids = append(mids, "in")
 		num_memory = 1
+	case "Register16":
+		ins = []string{"load"}
+		outs = []string{"out"}
+		mids = append(mids, "in")
+		num_memory = 1
 	default:
 		panic(fmt.Sprintf("unsupported partType. partType=%s", partType))
 	}
@@ -82,6 +87,10 @@ func (p *Part) PostRun(conValues map[string]int) {
 	switch p.partType {
 	case "DFF":
 		p.memory[0] = conValues[p.midCons["in"]]
+	case "Register16":
+		if conValues[p.inCons["load"]] == 1 {
+			p.memory[0] = conValues[p.midCons["in"]]
+		}
 	}
 }
 
@@ -171,6 +180,8 @@ func (p *Part) Simulate(conValues map[string]int) {
 			conValues[o] = conValues[p.inCons["b"]]
 		}
 	} else if p.partType == "DFF" {
+		conValues[p.outCons["out"]] = p.memory[0]
+	} else if p.partType == "Register16" {
 		conValues[p.outCons["out"]] = p.memory[0]
 	} else {
 		panic(fmt.Sprintf("unsupported partType. partType=%s", p.partType))

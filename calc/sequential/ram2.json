@@ -1,0 +1,29 @@
+{
+    "load": ".",
+    "output": ["in", "load", "address", "out"],
+    "eval": [
+        {"in": 1, "load": 1, "address": 0},
+        {"in": 2, "load": 1, "address": 1},
+        {"in": 3, "load": 0, "address": 0},
+        {"in": 4, "load": 0, "address": 1},
+        {"in": 5, "load": 0, "address": 0},
+        {"in": 6, "load": 1, "address": 0},
+        {"in": 7, "load": 0, "address": 1},
+        {"in": 8, "load": 0, "address": 0}
+    ],
+
+    "name": "ram2",
+    "in": ["in", "load", "address"],
+    "out": ["out"],
+    "parts": [
+        {"name": "Decoder16", "con": {"in": "address", "0": "a0"}},
+        {"name": "Not", "con": {"in": "a0", "out": "n0"}},
+        {"name": "And", "con": {"a": "a0", "b": "load", "out": "l1"}},
+        {"name": "And", "con": {"a": "n0", "b": "load", "out": "l0"}},
+
+        {"name": "Register16", "con": {"in": "in", "load": "l0", "out": "o0"}},
+        {"name": "Register16", "con": {"in": "in", "load": "l1", "out": "o1"}},
+
+        {"name": "Mux2Way16", "con": {"a": "o0", "b": "o1", "sel": "a0", "out": "out"}}
+    ]
+}

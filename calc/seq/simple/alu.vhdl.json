@@ -1,0 +1,31 @@
+{
+    "name": "alu",
+    "in": ["x", "y", "zx", "nx", "zy", "ny", "f", "no"],
+    "out": ["out", "zr"],
+    "parts": [
+        {"name": "Not", "con": {"in": "zx", "out": "nzx"}},
+        {"name": "Copy16", "con": {"in": "nzx", "out": "nzxh"}},
+        {"name": "And16",  "con": {"a": "x", "b": "nzxh", "out": "x1"}},
+
+        {"name": "Copy16", "con": {"in": "nx", "out": "nxh"}},
+        {"name": "Xor16", "con": {"a": "x1", "b": "nxh", "out": "x2"}},
+
+        {"name": "Not", "con": {"in": "zy", "out": "nzy"}},
+        {"name": "Copy16", "con": {"in": "nzy", "out": "nzyh"}},
+        {"name": "And16",  "con": {"a": "y", "b": "nzyh", "out": "y1"}},
+
+        {"name": "Copy16", "con": {"in": "ny", "out": "nyh"}},
+        {"name": "Xor16", "con": {"a": "y1", "b": "nyh", "out": "y2"}},
+
+        {"name": "Adder16", "con": {"a": "x2", "b": "y2", "out": "pxy"}},
+        {"name": "And16", "con": {"a": "x2", "b": "y2", "out": "axy"}},
+
+        {"name": "Mux2Way16", "con": {"a": "axy", "b": "pxy", "sel": "f", "out": "xy"}},
+
+        {"name": "Copy16", "con": {"in": "no", "out": "noh"}},
+        {"name": "Xor16",  "con": {"a": "xy", "b": "noh", "out": "out"}},
+
+        {"name": "Not16", "con": {"in": "out", "out": "nout"}},
+        {"name": "AndAll16", "con": {"in": "nout", "out": "zr"}}        
+    ]
+}

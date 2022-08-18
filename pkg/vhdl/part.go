@@ -19,10 +19,13 @@ func NewPart(partType string, cons map[string]string) *Part {
 	var ins []string
 	var outs []string
 	switch partType {
-	case "Not", "Not16", "Copy16":
+	case "One", "Zero":
+		ins = make([]string, 0)
+		outs = []string{"out"}
+	case "Not", "Not16", "Copy16", "AndAll16":
 		ins = []string{"in"}
 		outs = []string{"out"}
-	case "And", "And16", "Or", "Or16", "Nand", "Nand16", "Xor", "Xor16":
+	case "And", "And16", "Or", "Or16", "Nand", "Nand16", "Xor", "Xor16", "Adder16":
 		ins = []string{"a", "b"}
 		outs = []string{"out"}
 	case "FullAdder":
@@ -40,8 +43,18 @@ func NewPart(partType string, cons map[string]string) *Part {
 		for j := 0; j < 16; j++ {
 			ins = append(ins, strconv.Itoa(j))
 		}
+	case "Mux2Way16":
+		ins = []string{"a", "b", "sel"}
+		outs = []string{"out"}
+	case "DMux2Way16":
+		ins = []string{"in", "sel"}
+		outs = []string{"a", "b"}
 	default:
 		panic(fmt.Sprintf("unsupported partType. partType=%s", partType))
+	}
+	fmt.Println(partType, ins, outs)
+	if len(ins)+len(outs) == 0 {
+		panic(fmt.Sprintf("invalid part. partType=%s", partType))
 	}
 	for _, i := range ins {
 		part.inCons[i] = cons[i]
@@ -86,6 +99,25 @@ func (p *Part) Simulate(conValues map[string]int) {
 		a := conValues[p.inCons["a"]]
 		b := conValues[p.inCons["b"]]
 		conValues[o] = 1 & ((a & ^b) | (^a & b))
+	} else if p.partType == "Xor16" {
+		o := p.outCons["out"]
+		a := conValues[p.inCons["a"]]
+		b := conValues[p.inCons["b"]]
+		conValues[o] = 65535 & ((a & ^b) | (^a & b))
+	} else if p.partType == "One" {
+		conValues[p.outCons["out"]] = 1
+	} else if p.partType == "Zero" {
+		conValues[p.outCons["out"]] = 0
+	} else if p.partType == "Adder16" {
+		x := conValues[p.inCons["a"]] + conValues[p.inCons["b"]]
+		conValues[p.outCons["out"]] = 65535 & x
+	} else if p.partType == "AndAll16" {
+		o := p.outCons["out"]
+		if 65535 == conValues[p.inCons["i"]] {
+			conValues[o] = 1
+		} else {
+			conValues[o] = 0
+		}
 	} else if p.partType == "Copy16" {
 		i := p.inCons["in"]
 		o := p.outCons["out"]
@@ -110,6 +142,14 @@ func (p *Part) Simulate(conValues map[string]int) {
 		}
 	} else if p.partType == "Encoder16" {
 		p.runEncoder16(conValues)
+	} else if p.partType == "Mux2Way16" {
+		o := p.outCons["out"]
+		switch 1 & conValues[p.inCons["sel"]] {
+		case 0:
+			conValues[o] = conValues[p.inCons["a"]]
+		case 1:
+			conValues[o] = conValues[p.inCons["b"]]
+		}
 	} else {
 		panic(fmt.Sprintf("unsupported partType. partType=%s", p.partType))
 	}

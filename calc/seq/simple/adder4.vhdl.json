@@ -22,7 +22,9 @@
             }
         },
 
-        {"name": "FullAdder", "con": {"a": "a0", "b": "b0", "c": "a15", "sum": "s0", "carry": "c0"}},
+        {"name": "Zero", "con": {"out": "zz"}},
+
+        {"name": "FullAdder", "con": {"a": "a0", "b": "b0", "c": "zz", "sum": "s0", "carry": "c0"}},
         {"name": "FullAdder", "con": {"a": "a1", "b": "b1", "c": "c0", "sum": "s1", "carry": "c1"}},
         {"name": "FullAdder", "con": {"a": "a2", "b": "b2", "c": "c1", "sum": "s2", "carry": "c2"}},
         {"name": "FullAdder", "con": {"a": "a3", "b": "b3", "c": "c2", "sum": "s3", "carry": "c3"}},

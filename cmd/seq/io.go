@@ -59,6 +59,9 @@ func ReadCircuit(fileName string) *vhdl.Circuit {
 	json.Unmarshal(raw, &vhdlScript)
 
 	p := vhdl.NewCircuit()
+	if len(vhdlScript.Parts) == 0 {
+		panic("parts not found")
+	}
 	for _, part := range vhdlScript.Parts {
 		p.AddPart(part.Name, part.Con)
 	}
@@ -75,7 +78,13 @@ func (p *Seq) Run(verbose int) {
 		p.circuit.Run(conValues, p.outputCons, verbose)
 		fmt.Print("| ")
 		for _, con := range p.outputCons {
-			fmt.Print(p.circuit.ConValue(con), " | ")
+			// 65535: 1111 1111 1111 1111
+			// 32768: 1000 0000 0000 0000
+			var x = p.circuit.ConValue(con)
+			if x&32768 > 0 {
+				x = -(65535 & ^x + 1)
+			}
+			fmt.Print(x, " | ")
 		}
 		fmt.Println("")
 	}

@@ -1,0 +1,28 @@
+{
+    "load": ".",
+    "output": ["in", "load", "inc", "reset", "out"],
+    "eval": [
+        {"in": 3, "load": 1, "inc": 0, "reset": 0},
+        {"in": 2, "load": 0, "inc": 1, "reset": 0},
+        {"in": 3, "load": 0, "inc": 1, "reset": 0},
+        {"in": 4, "load": 0, "inc": 1, "reset": 0},
+        {"in": 5, "load": 0, "inc": 0, "reset": 1},
+        {"in": 6, "load": 1, "inc": 0, "reset": 0},
+        {"in": 7, "load": 0, "inc": 0, "reset": 0},
+        {"in": 8, "load": 0, "inc": 0, "reset": 0}
+    ],
+
+    "name": "pc16",
+    "comment": "",
+    "in": ["in", "inc", "load", "reset"],
+    "out": ["out"],
+    "parts": [
+        {"name": "Zero", "con": {"out": "zero"}},
+
+        {"name": "Adder16", "con": {"a": "out", "b": "inc", "out": "out_inc"}},
+        {"name": "Mux2Way16", "con": {"a": "out", "b": "out_inc", "sel": "inc", "out": "pc_w2"}},
+        {"name": "Mux2Way16", "con": {"a": "pc_w2", "b": "in", "sel": "load", "out": "pc_w3"}},
+        {"name": "Mux2Way16", "con": {"a": "pc_w3", "b": "zero",  "sel": "reset", "out": "pc_w4"}},
+        {"name": "DFF", "con": {"in": "pc_w4", "out": "out"}}
+    ]
+}

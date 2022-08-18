@@ -1,0 +1,21 @@
+{
+    "load": ".",
+    "output": ["in", "load", "address", "out"],
+    "eval": [
+        {"in": 9, "load": 1, "address": 0},
+        {"in": 2, "load": 1, "address": 9},
+        {"in": 3, "load": 0, "address": 0},
+        {"in": 4, "load": 0, "address": 9},
+        {"in": 5, "load": 0, "address": 2},
+        {"in": 6, "load": 1, "address": 3},
+        {"in": 7, "load": 0, "address": 9},
+        {"in": 8, "load": 0, "address": 6}
+    ],
+
+    "name": "ram16_impl",
+    "in": ["in", "load", "address"],
+    "out": ["out"],
+    "parts": [
+        {"name": "RAM16", "con": {"in": "in", "address": "address", "load": "load", "out": "out"}}
+    ]
+}

@@ -44,6 +44,11 @@ func (p *Circuit) Run(inConValues map[string]int, outCons []string, verbose int)
 		p.conValues[con] = inConValues[con]
 	}
 
+	// pre run
+	for _, part := range p.parts {
+		part.PreRun(p.conValues)
+	}
+
 	// loop until evaluation stopped
 	for true {
 		var update = false

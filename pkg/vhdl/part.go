@@ -164,7 +164,6 @@ func (p *Part) Simulate(conValues map[string]int) {
 			conValues[o] = conValues[p.inCons["b"]]
 		}
 	} else if p.partType == "DFF" {
-		conValues[p.outCons["out"]] = p.memory[0]
 		p.memory[0] = conValues[p.inCons["in"]]
 	} else {
 		panic(fmt.Sprintf("unsupported partType. partType=%s", p.partType))

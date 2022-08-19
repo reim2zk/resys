@@ -89,3 +89,12 @@ func (p *Circuit) Run(inConValues map[string]int, outCons []string, verbose int)
 func (p *Circuit) ConValue(con string) int {
 	return p.conValues[con]
 }
+
+func (p *Circuit) FindFirstPart(partType string) *Part {
+	for _, part := range p.parts {
+		if part.partType == partType {
+			return part
+		}
+	}
+	return nil
+}

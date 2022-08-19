@@ -1,6 +1,7 @@
 {
     "load": "alu.vhdl.json",
     "output": ["x", "y", "zx", "nx", "zy", "ny", "f", "no", "out"],
+    "unit": "int",
     "eval": [
         {"x": 10, "y": 3, "zx": 1, "nx": 0, "zy": 1, "ny": 0, "f": 1, "no": 0},
         {"x": 10, "y": 3, "zx": 1, "nx": 1, "zy": 1, "ny": 1, "f": 1, "no": 1},

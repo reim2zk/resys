@@ -235,3 +235,9 @@ func (p *Part) runEncoder16(conValues map[string]int) {
 	}
 	conValues[p.outCons["out"]] = x
 }
+
+func (p *Part) SaveMemory(xs []int) {
+	for i, m := range xs {
+		p.memory[i] = m
+	}
+}

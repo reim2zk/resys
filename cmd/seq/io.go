@@ -19,6 +19,8 @@ type SeqScript struct {
 	Load   string
 	Output []string
 	Eval   [](map[string]int)
+	Unit   string
+	Memory []string
 }
 
 type PartScript struct {
@@ -47,13 +49,15 @@ func ReadSeqScript(fileName string) *Seq {
 	seq.conValuesList = script.Eval
 	for i := range seq.conValuesList {
 		m := seq.conValuesList[i]
-		for k := range m {
-			x := strconv.Itoa(m[k])
-			y, err := strconv.ParseInt(x, 2, 17)
-			if err != nil {
-				panic(err)
+		if script.Unit == "" || script.Unit == "bin" {
+			for k := range m {
+				x := strconv.Itoa(m[k])
+				y, err := strconv.ParseInt(x, 2, 17)
+				if err != nil {
+					panic(err)
+				}
+				m[k] = int(y)
 			}
-			m[k] = int(y)
 		}
 	}
 
@@ -64,7 +68,27 @@ func ReadSeqScript(fileName string) *Seq {
 		fp = filepath.Dir(fileName) + "/" + script.Load
 	}
 	seq.circuit = ReadCircuit(fp)
+
+	if len(script.Memory) > 0 {
+		saveMemory(seq, script)
+	}
+
 	return &seq
+}
+
+func saveMemory(seq Seq, script SeqScript) {
+	ram := seq.circuit.FindFirstPart("RAM16")
+	if ram != nil {
+		xs := make([]int, len(script.Memory))
+		for i, x := range script.Memory {
+			y, err := strconv.ParseInt(x, 2, 17)
+			if err != nil {
+				panic("failed to parse")
+			}
+			xs[i] = int(y)
+		}
+		ram.SaveMemory(xs)
+	}
 }
 
 func ReadCircuit(fileName string) *vhdl.Circuit {

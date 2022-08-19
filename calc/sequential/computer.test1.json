@@ -1,0 +1,20 @@
+{
+    "load": "computer.vhdl.json",
+    "output": ["pc", "inst", "inm", "addressm", "outm", "writem", "j3", "j1", "j2", "outm_minus", "outm_zero", "outm_plus"],
+    "eval": [
+        {"reset": 0},
+        {"reset": 0},
+        {"reset": 0},
+        {"reset": 0},
+        {"reset": 0},
+        {"reset": 0},
+        {"reset": 0}
+    ],
+    "memory": [
+               "1111000000000",
+            "1110110111010000",
+            "1110000010011000",
+            "1110000010010111",
+            "1111110011011000"
+        ]
+}

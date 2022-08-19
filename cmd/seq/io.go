@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"path/filepath"
 	"resys/pkg/vhdl"
+	"strconv"
 )
 
 type Seq struct {
@@ -44,6 +45,17 @@ func ReadSeqScript(fileName string) *Seq {
 	var seq Seq
 	seq.outputCons = script.Output
 	seq.conValuesList = script.Eval
+	for i := range seq.conValuesList {
+		m := seq.conValuesList[i]
+		for k := range m {
+			x := strconv.Itoa(m[k])
+			y, err := strconv.ParseInt(x, 2, 17)
+			if err != nil {
+				panic(err)
+			}
+			m[k] = int(y)
+		}
+	}
 
 	var fp string
 	if script.Load == "." {

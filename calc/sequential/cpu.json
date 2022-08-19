@@ -1,11 +1,14 @@
 {
     "load": ".",
-    "output": ["inst", "inm", "reset", "pc", "addressm", "outm"],
+    "output": ["inst", "inm", "reset", "pc", "addressm", "outm", "x", "y"],
     "eval": [
-        {"inst": 65500, "inm": 10, "reset": 0},
-        {"inst": 88, "inm": 11, "reset": 0},
-        {"inst": 99, "inm": 12, "reset": 0},
-        {"inst": 80, "inm": 13, "reset": 0}
+        {"inst":    1111000000110, "inm": 110010011111111, "reset": 0},
+        {"inst": 1110110111010000, "inm":              10, "reset": 0},
+        {"inst": 1110000010010000, "inm":             111, "reset": 0},
+        {"inst": 1110000010010000, "inm":               1, "reset": 0},
+        {"inst": 1110000010010000, "inm":               1, "reset": 1},
+        {"inst": 1110000010010000, "inm":               1, "reset": 0},
+        {"inst": 1110000010010000, "inm":               1, "reset": 0}
     ],
 
     "name": "cpu",
@@ -17,17 +20,22 @@
 
         {"name": "Decoder16", 
          "con": {"in": "inst", 
-                "0": "a_or_c", "1": "1", "2": "2", "3": "a", 
-                "4": "zx", "5": "nx", "6": "zy", "7": "ny", "8": "f", "9": "no", 
-                "10": "writea", "11": "writed", "12": "writem", 
-                "13": "j1", "14": "j2", "15": "j3"
+                "15": "a_or_c", "14": "1", "13": "2", "12": "a", 
+                "11": "zx", "10": "nx", "9": "zy", "8": "ny", "7": "f", "6": "no", 
+                "5": "d1", "4": "d2", "3": "d3", 
+                "2": "j1", "1": "j2", "0": "j3"
                }
         },
 
+        {"name": "Not", "con": {"in": "a_or_c", "out": "c_or_a"}},
+        {"name": "Or", "con": {"a": "d1", "b": "c_or_a", "out": "writea"}},
+        {"name": "And", "con": {"a": "d2", "b": "a_or_c", "out": "writed"}},
+        {"name": "And", "con": {"a": "d3", "b": "a_or_c", "out": "writem"}},
+
         {"name": "Mux2Way16", "con": {"a": "inst", "b": "outm", "sel": "a_or_c", "out": "in_regi_a"}},
         {"name": "Register16", "con": {"in": "in_regi_a", "load": "writea", "out": "addressm"}},
-        {"name": "Mux2Way16", "con": {"a": "addressm", "b": "inm", "sel": "a", "out": "x"}},
-        {"name": "Register16", "con": {"in": "outm", "load": "writed", "out": "y"}},
+        {"name": "Mux2Way16", "con": {"a": "addressm", "b": "inm", "sel": "a", "out": "y"}},
+        {"name": "Register16", "con": {"in": "outm", "load": "writed", "out": "x"}},
 
         {"name": "Not", "con": {"in": "zx", "out": "nzx"}},
         {"name": "Copy16", "con": {"in": "nzx", "out": "nzxh"}},

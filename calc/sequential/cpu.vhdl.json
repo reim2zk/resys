@@ -1,0 +1,60 @@
+{
+    "name": "cpu",
+    "in": ["inst", "inm", "reset"],
+    "out": ["outm", "writem", "addressm", "pc"],
+    "parts": [
+        
+    {"name": "Zero", "con": {"out": "zero"}},
+    {"name": "One", "con": {"out": "one"}},
+
+    {"name": "Decoder16", 
+     "con": {"in": "inst", 
+            "15": "a_or_c", "14": "1", "13": "2", "12": "a", 
+            "11": "zx", "10": "nx", "9": "zy", "8": "ny", "7": "f", "6": "no", 
+            "5": "d1", "4": "d2", "3": "d3", 
+            "2": "j1", "1": "j2", "0": "j3"
+           }
+    },
+
+    {"name": "Not", "con": {"in": "a_or_c", "out": "c_or_a"}},
+    {"name": "Or", "con": {"a": "d1", "b": "c_or_a", "out": "writea"}},
+    {"name": "And", "con": {"a": "d2", "b": "a_or_c", "out": "writed"}},
+    {"name": "And", "con": {"a": "d3", "b": "a_or_c", "out": "writem"}},
+
+    {"name": "Mux2Way16", "con": {"a": "inst", "b": "outm", "sel": "a_or_c", "out": "in_regi_a"}},
+    {"name": "Register16", "con": {"in": "in_regi_a", "load": "writea", "out": "addressm"}},
+    {"name": "Mux2Way16", "con": {"a": "addressm", "b": "inm", "sel": "a", "out": "y"}},
+    {"name": "Register16", "con": {"in": "outm", "load": "writed", "out": "x"}},
+
+    {"name": "Not", "con": {"in": "zx", "out": "nzx"}},
+    {"name": "Copy16", "con": {"in": "nzx", "out": "nzxh"}},
+    {"name": "And16",  "con": {"a": "x", "b": "nzxh", "out": "x1"}},
+    {"name": "Copy16", "con": {"in": "nx", "out": "nxh"}},
+    {"name": "Xor16", "con": {"a": "x1", "b": "nxh", "out": "x2"}},
+    {"name": "Not", "con": {"in": "zy", "out": "nzy"}},
+    {"name": "Copy16", "con": {"in": "nzy", "out": "nzyh"}},
+    {"name": "And16",  "con": {"a": "y", "b": "nzyh", "out": "y1"}},
+    {"name": "Copy16", "con": {"in": "ny", "out": "nyh"}},
+    {"name": "Xor16", "con": {"a": "y1", "b": "nyh", "out": "y2"}},
+    {"name": "Adder16", "con": {"a": "x2", "b": "y2", "out": "pxy"}},
+    {"name": "And16", "con": {"a": "x2", "b": "y2", "out": "axy"}},
+    {"name": "Mux2Way16", "con": {"a": "axy", "b": "pxy", "sel": "f", "out": "xy"}},
+    {"name": "Copy16", "con": {"in": "no", "out": "noh"}},
+    {"name": "Xor16",  "con": {"a": "xy", "b": "noh", "out": "outm"}},
+    {"name": "Not16", "con": {"in": "outm", "out": "noutm"}},
+    {"name": "AndAll16", "con": {"in": "noutm", "out": "outm_zero"}},
+    {"name": "Decoder16", "con": {"in": "outm", "15": "outm_minus"}},
+
+    {"name": "Adder16", "con": {"a": "pc", "b": "one", "out": "pc_w1"}},
+    {"name": "Mux2Way16", "con": {"a": "pc_w1", "b": "addressm", "sel": "jump", "out": "pc_w2"}},
+    {"name": "Mux2Way16", "con": {"a": "pc_w2", "b": "zero", "sel": "reset", "out": "pc_w3"}},
+    {"name": "DFF", "con": {"in": "pc_w3", "out": "pc"}},
+
+    {"name": "Xor", "con": {"a": "outm_zero", "b": "outm_minus", "out": "outm_plus"}},
+    {"name": "And", "con": {"a": "j1", "b": "outm_minus", "out": "jump0"}},
+    {"name": "And", "con": {"a": "j2", "b": "outm_zero", "out": "jump1"}},
+    {"name": "And", "con": {"a": "j3", "b": "outm_plus", "out": "jump2"}},
+    {"name": "Or", "con": {"a": "jump0", "b": "jump1", "out": "jump01"}},
+    {"name": "Or", "con": {"a": "jump01", "b": "jump2", "out": "jump"}}
+]
+}

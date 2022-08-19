@@ -152,7 +152,7 @@ func (p *Part) Simulate(conValues map[string]int) {
 		conValues[p.outCons["out"]] = 65535 & x
 	} else if p.partType == "AndAll16" {
 		o := p.outCons["out"]
-		if 65535 == conValues[p.inCons["i"]] {
+		if 65535 == (65535 & conValues[p.inCons["in"]]) {
 			conValues[o] = 1
 		} else {
 			conValues[o] = 0

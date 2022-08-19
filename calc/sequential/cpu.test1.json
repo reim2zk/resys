@@ -1,0 +1,13 @@
+{
+    "load": "cpu.vhdl.json",
+    "output": ["inst", "inm", "reset", "pc", "addressm", "outm", "writem"],
+    "eval": [
+        {"inst":    1111000000110, "inm": 110010011111111, "reset": 0},
+        {"inst": 1110110111010000, "inm":              10, "reset": 0},
+        {"inst": 1110000010011000, "inm":             111, "reset": 0},
+        {"inst": 1110000010010111, "inm":               1, "reset": 0},
+        {"inst": 1111110011011000, "inm":           11101, "reset": 0},
+        {"inst": 1111000010010000, "inm":           11011, "reset": 0},
+        {"inst": 1111000010010000, "inm":          110001, "reset": 0}
+    ]
+}
